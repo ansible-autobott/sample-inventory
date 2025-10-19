@@ -10,7 +10,8 @@ run_role_caddy: True
 caddy:
   admin: "0.0.0.0:2019"
   email: "me@example.com"
-
+  caddy_plugins:
+    - github.com/caddy-dns/cloudflare
 
 
 #============================================================================================================

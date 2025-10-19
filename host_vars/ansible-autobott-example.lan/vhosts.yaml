@@ -9,6 +9,21 @@ vhosts_config: {}
 
 vhosts:
 
+  - name: cloud_flare
+    enabled: false
+    comment: "cloudflaredns"
+    servers:
+      # Homepage
+      - type: "proxy"
+        enabled: true
+        domains:
+          - "https://local.top.domain" # TODO put here your real domain
+        proxy_url: "http://127.0.0.1:3003"
+        authelia: true
+        tls:
+          type: "cloudflare" # CF DNS challenge
+          api_key: "{{ secrets.services.caddy.cf_api_token }}"
+
   - name: main_proxy_service
     enabled: true
     comment: "main proxied services"
@@ -20,8 +35,9 @@ vhosts:
         domains:
           - "https://ansible-autobott-example.lan"
         proxy_url: "http://127.0.0.1:3003"
-        internal_ssl: true
         authelia: true
+        tls:
+          type: "internal"
 
       # Authelia
       - type: "proxy"
@@ -29,7 +45,8 @@ vhosts:
         domains:
           - "https://auth.ansible-autobott-example.lan"
         proxy_url: "http://127.0.0.1:9031"
-        internal_ssl: true
+        tls:
+          type: "internal"
 
       # Docmost ============================
       - enabled: true
@@ -37,7 +54,8 @@ vhosts:
           - "https://wiki.ansible-autobott-example.lan"
         type: "proxy"
         proxy_url: "http://127.0.0.1:3030"
-        internal_ssl: true
+        tls:
+          type: "internal"
 
       # Mealie ============================
       - enabled: true
@@ -45,7 +63,8 @@ vhosts:
           - "https://meals.ansible-autobott-example.lan"
         type: "proxy"
         proxy_url: "http://127.0.0.1:9925"
-        internal_ssl: true
+        tls:
+          type: "internal"
 
 
   - name: demo_php

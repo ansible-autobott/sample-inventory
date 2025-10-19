@@ -31,7 +31,7 @@ authelia:
 
   sites:
     - domain: "ansible-autobott-example.lan"
-      policy: "two_factor" # one_factor | two_factor
+      policy: "one_factor" # one_factor | two_factor
       groups:
         - homepage
 
