@@ -51,6 +51,21 @@ authelia:
       groups:
         - servarr
 
+    # aether: members of the aether-admin group get admin rights inside aether
+    # (see aether.config.auth.proxy_header.admin_group in webservices.yaml).
+    - domain: "aether.ansible-autobott-example.lan"
+      policy: "one_factor" # one_factor | two_factor
+      groups:
+        - aether-admin
+
+    - domain:
+        - "prometheus.ansible-autobott-example.lan"
+        - "alertmanager.ansible-autobott-example.lan"
+        - "monit.ansible-autobott-example.lan"
+      policy: "one_factor" # one_factor | two_factor
+      groups:
+        - monitoring
+
   timeout:
     # The period of time the user can be inactive for until the session is destroyed
     inactivity: '10m'
@@ -73,6 +88,8 @@ authelia:
       groups:
         - homepage
         - servarr
+        - aether-admin
+        - monitoring
       disabled: false
 
   # smtp config used for notifications, e.g. when enabling 2fa

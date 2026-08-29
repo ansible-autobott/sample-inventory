@@ -1,0 +1,38 @@
+# SOPS configuration — https://github.com/getsops/sops
+#
+# sops locates this file by walking UP from the target secret file, so it must
+# live in THIS inventory repo to govern its secrets. The autobott (playbook)
+# repo has its own .sops.yaml that only covers its in-repo vagrant example.
+#
+# ⚠️  FIRST THING TO DO in a fresh clone: replace the sample recipient below
+#     with your OWN public key — the private half of the sample key was never
+#     committed, so you cannot decrypt anything sealed to it.
+#
+#   1. Create your key (from the autobott repo, pointing INV at this inventory):
+#        make age-key INV=<path-to-this-inventory>
+#      This writes the private key to sops_key (gitignored) here and prints your
+#      PUBLIC key (age1...). See sops_key.README.md.
+#   2. Replace the sample recipient in the `age:` list below with your public key
+#      — a YAML list (one `- age1...` per line) or a comma-separated string;
+#      each recipient can decrypt.
+#   3. Rename the shipped plaintext secrets to the .sops.yaml suffix and seal it:
+#        git mv host_vars/<host>/secrets.yaml host_vars/<host>/secrets.sops.yaml
+#        make seal-secrets INV=<path-to-this-inventory> HOST=ansible-autobott-example.lan
+#   4. Later, after adding/removing recipients, re-encrypt existing files:
+#        make rekey INV=<path-to-this-inventory>
+#
+# Encrypted *.sops.yaml files are safe to commit — only values are ciphertext;
+# keys and structure stay in plaintext for readable diffs. This boilerplate ships
+# secrets as clear text in secrets.yaml (so the example runs out-of-box); a
+# plaintext *.sops.yaml would instead make the sops vars plugin refuse to load.
+
+creation_rules:
+  # Suffix-anchored so it matches whether sops is invoked from inside this repo
+  # or via a relative ../ path from the playbook repo. Covers host_vars & group_vars.
+  - path_regex: (^|/)(host_vars|group_vars)/.*\.sops\.ya?ml$
+    # age recipients (public keys) — a YAML list (one `- age1...` per line) or a
+    # comma-separated string; each recipient can decrypt.
+    age:
+      # SAMPLE key — REPLACE with your own before sealing (see above). Its private
+      # half is not committed anywhere, so it decrypts nothing.
+      - age18auj7zx70pnhtzcfjpv4cpaxjw5zuuawz7hq0fmhk89x7dnfe9tspagayj
