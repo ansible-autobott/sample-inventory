@@ -72,4 +72,31 @@ linux_basic:
       groups: ["sudo","smbmedia" ]
       password: "{{ secrets.users.jsmith.password}}"
       shell: /bin/bash # optional
+      # optional: authorized keys for this user (empty string removes all)
+      ssh_key:
+        - "ssh-ed25519 AAAA...replace-me user@laptop"
+      # optional: keys to revoke
+      # ssh_key_revoked:
+      #   - "ssh-ed25519 AAAA...old-key user@old-laptop"
+
+#============================================================================================================
+# Nullmailer
+#============================================================================================================
+run_role_nullmailer: False
+nullmailer:
+  email_to: "root@localhost,me@example.com"
+  email_from: "autobott-example"
+  smtp_server: "{{ secrets.email.address }}"
+  smtp_user: "{{ secrets.email.user }}"
+  smtp_pass: "{{ secrets.email.pass }}"
+
+#============================================================================================================
+# ZFS
+#============================================================================================================
+run_role_zfs: False
+
+#============================================================================================================
+# Smartd
+#============================================================================================================
+run_role_smartd: True
 

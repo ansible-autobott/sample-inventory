@@ -36,3 +36,38 @@ docmost:
 run_role_mealie: true
 mealie:
   base_url: https://meals.ansible-autobott-example.lan
+
+#============================================================================================================
+# Aether
+#============================================================================================================
+run_role_aether: true
+# Music server (OpenSubsonic API + web player), installed from the upstream .deb.
+# Fronted by caddy + authelia (see the aether vhost in vhosts.yaml and the
+# aether site in security.yaml).
+aether:
+  # To let aether read/write a shared media library like the servarr stack, add
+  # its service user to the media group and set a group-writable umask.
+  # extra_groups:
+  #   - smbmedia
+  # umask: "0007"
+
+  config:
+    server:
+      # Required with proxy-header auth: aether trusts the identity headers on
+      # every request, so it must only be reachable through the proxy that sets them.
+      bind_ip: "127.0.0.1"
+
+    # Identity comes from the reverse proxy (authelia forward-auth). Members of
+    # admin_group become aether admins.
+    auth:
+      method: proxy-header
+      proxy_header:
+        admin_group: "aether-admin"
+        trusted_proxies:
+          - "127.0.0.1"
+          - "::1"
+
+    # Artist image fetching (fanart.tv / TheAudioDB). Empty -> disabled.
+    artist_images:
+      fanart_api_key: ""
+      theaudiodb_api_key: ""

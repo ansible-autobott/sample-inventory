@@ -1,0 +1,9 @@
+---
+# Connection defaults applied to every host.
+
+# Use the UNVERSIONED python symlink, never a versioned path like
+# /usr/bin/python3.11. The python3 package repoints this symlink during a Debian
+# dist-upgrade, so the interpreter survives a major version bump (e.g. bookworm's
+# 3.11 -> trixie's 3.13). A versioned pin breaks the upgrade mid-play once the
+# old binary is removed.
+ansible_python_interpreter: /usr/bin/python3

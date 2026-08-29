@@ -1,1 +1,0 @@
-put the vault secret here and rename to vault_pass.txt

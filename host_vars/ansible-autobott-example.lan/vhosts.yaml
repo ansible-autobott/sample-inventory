@@ -190,3 +190,60 @@ vhosts:
         type: "proxy"
         proxy_url: "http://127.0.0.1:9997"
         internal_ssl: true
+
+      # Aether =============================
+      # music server, protected by authelia (see the authelia block in security.yaml).
+      # aether uses auth.method: proxy-header, so it trusts the Remote-User/Remote-Groups
+      # headers that the forward_auth below injects.
+      - enabled: true
+        domains:
+          - "https://aether.ansible-autobott-example.lan"
+        type: "proxy"
+        proxy_url: "http://127.0.0.1:8075"
+        internal_ssl: true
+        authelia: true
+        # the OpenSubsonic API authenticates with per-user api keys, so it must not
+        # be sent to authelia's login page: subsonic clients cannot handle the html
+        # redirect. everything else (the web player) stays protected.
+        authelia_except_paths:
+          - "/rest"
+          - "/rest/*"
+
+  - name: monitoring
+    enabled: true
+    comment: "monitoring services"
+    servers:
+      # Grafana ============================
+      - type: "proxy"
+        enabled: true
+        domains:
+          - "https://grafana.ansible-autobott-example.lan"
+        proxy_url: "http://127.0.0.1:3000"
+        internal_ssl: true
+
+      # Prometheus =========================
+      - type: "proxy"
+        enabled: true
+        domains:
+          - "https://prometheus.ansible-autobott-example.lan"
+        proxy_url: "http://127.0.0.1:9090"
+        internal_ssl: true
+        authelia: true
+
+      # Alertmanager =======================
+      - type: "proxy"
+        enabled: true
+        domains:
+          - "https://alertmanager.ansible-autobott-example.lan"
+        proxy_url: "http://127.0.0.1:9093"
+        internal_ssl: true
+        authelia: true
+
+      # Monit ==============================
+      - type: "proxy"
+        enabled: true
+        domains:
+          - "https://monit.ansible-autobott-example.lan"
+        proxy_url: "http://127.0.0.1:2812"
+        internal_ssl: true
+        authelia: true

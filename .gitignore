@@ -2,10 +2,9 @@
 log
 *.retry
 
-# Ignore Ansible vault password file
-vault_password
-vault_pass.txt
-.vault_pass.txt
+# SOPS age private key — never commit (encrypted *.sops.yaml files are safe to commit).
+# sops_key.README.md is tracked so operators know how to create it.
+/sops_key
 
 # ignore borg keys
 files/borg/*
